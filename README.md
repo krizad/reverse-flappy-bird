@@ -3,7 +3,10 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Zero Dependencies](https://img.shields.io/badge/Dependencies-0-brightgreen.svg)](#technology-stack)
 [![HTML5 Canvas](https://img.shields.io/badge/Graphics-HTML5%20Canvas-orange.svg)](#features)
-[![Web Audio API](https://img.shields.io/badge/Audio-Web%20Audio%20API-blue.svg)](#sound--chiptune-music)
+[![Web Audio API](https://img.shields.io/badge/Audio-Web%20Audio%20API-blue.svg)](#features)
+[![Play Online](https://img.shields.io/badge/Play%20Online-GitHub%20Pages-success?style=flat&logo=github)](https://krizad.github.io/reverse-flappy-bird/)
+
+## 🕹️ [Play Live Demo: https://krizad.github.io/reverse-flappy-bird/](https://krizad.github.io/reverse-flappy-bird/)
 
 > **Flip the classic role!** You are no longer the fragile flapping bird — **You are the iconic green pipe**. Slide your pipe vertically to open safe passage for the flock, survive reckless flyers, build combo streaks, and master dynamic day-to-night skies!
 
@@ -61,15 +64,22 @@ Just like the iconic arcade scoreboard:
 
 ## 🚀 Getting Started
 
-### Option 1: Direct Browser Launch (No installation needed)
-Simply clone the repository and open `index.html` in any modern web browser:
+### Option 1: Play Live in Browser (No Installation)
+
+Jump straight into the action on GitHub Pages:  
+👉 **[https://krizad.github.io/reverse-flappy-bird/](https://krizad.github.io/reverse-flappy-bird/)**
+
+### Option 2: Direct Local Browser Launch
+
+Clone the repository and open `index.html` directly in any modern web browser:
 ```bash
-git clone https://github.com/your-username/reverse-flappy-bird.git
+git clone https://github.com/krizad/reverse-flappy-bird.git
 cd reverse-flappy-bird
 open index.html # On macOS (or double-click index.html in Explorer / Finder)
 ```
 
-### Option 2: Local Dev Server
+### Option 3: Local Dev Server
+
 ```bash
 npm run dev
 # Launches a local server at http://localhost:3000

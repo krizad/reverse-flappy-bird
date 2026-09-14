@@ -2,11 +2,16 @@
   "name": "reverse-flappy-bird",
   "version": "2.0.0",
   "description": "Reverse Flappy Bird - You are the Pipe! An enhanced arcade web game.",
+  "homepage": "https://krizad.github.io/reverse-flappy-bird/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krizad/reverse-flappy-bird.git"
+  },
   "scripts": {
     "dev": "npx -y serve . -l 3000",
     "start": "npx -y serve ."
   },
   "keywords": ["game", "canvas", "retro", "arcade", "flappy-bird"],
-  "author": "",
+  "author": "KriZad",
   "license": "MIT"
 }
