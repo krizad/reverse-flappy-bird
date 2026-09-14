@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reverse Flappy Bird - You Are the Pipe!</title>
+  <meta name="description" content="Reverse Flappy Bird: You are the pipe! Slide vertical green pipes to guide birds through safely, build combo streaks, and master day-to-night skies.">
+  
+  <!-- Vector SVG Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22><circle cx=%2216%22 cy=%2216%22 r=%2213%22 fill=%22%23facc15%22 stroke=%22%23000%22 stroke-width=%222%22/><circle cx=%2221%22 cy=%2212%22 r=%223.5%22 fill=%22%23fff%22/><circle cx=%2222%22 cy=%2212%22 r=%221.8%22 fill=%22%23000%22/><path d=%22M22 17l7 2-7 3z%22 fill=%22%23f97316%22 stroke=%22%23000%22 stroke-width=%221.5%22/></svg>">
+  
+  <!-- Retro Arcade Stylesheets -->
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/ui.css">
+  <link rel="stylesheet" href="css/retro.css">
+</head>
+<body>
+
+  <div id="game-container">
+    <!-- Retro Arcade CRT Scanlines & Vignette -->
+    <div class="crt-overlay"></div>
+    <div class="crt-vignette"></div>
+
+    <!-- Top Arcade Control Bar with SVG Vector Icons -->
+    <div class="top-controls">
+      <button id="fullscreen-btn" class="icon-btn" title="Toggle Fullscreen">
+        <svg class="icon-svg" viewBox="0 0 24 24"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>
+      </button>
+      <button id="pause-btn" class="icon-btn" title="Pause Game (P / ESC)">
+        <svg class="icon-svg" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+      </button>
+      <button id="sfx-toggle" class="icon-btn" title="Toggle SFX">
+        <svg class="icon-svg" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+      </button>
+      <button id="bgm-toggle" class="icon-btn" title="Toggle Chiptune Music">
+        <svg class="icon-svg" viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+      </button>
+      <button id="guide-btn" class="icon-btn" title="How to Play">
+        <svg class="icon-svg" viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/></svg>
+      </button>
+      <button id="stats-btn" class="icon-btn" title="Career Stats">
+        <svg class="icon-svg" viewBox="0 0 24 24"><path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94.63 1.5 1.98 2.63 3.61 2.96V19H7v2h10v-2h-4v-3.1c1.63-.33 2.98-1.46 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/></svg>
+      </button>
+    </div>
+
+    <!-- Start Screen Overlay -->
+    <div id="start-screen" class="overlay">
+      <div class="logo-container">
+        <div class="logo-reverse">REVERSE</div>
+        <div class="logo-flappy">FLAPPY</div>
+      </div>
+
+      <div class="start-prompt">
+        <div><b>YOU ARE THE PIPE!</b></div>
+        <div>↕ Move mouse/touch or press <b>W / S / ▲ / ▼</b></div>
+      </div>
+
+      <div class="btn-row">
+        <button id="start-btn" class="btn-arcade">START GAME</button>
+      </div>
+    </div>
+
+    <!-- Pause Screen Overlay -->
+    <div id="pause-screen" class="overlay hidden">
+      <div class="scoreboard-card" style="text-align: center; max-width: 380px;">
+        <div class="scoreboard-title" style="color: #0284c7;">GAME PAUSED</div>
+        <div style="font-size: 10px; line-height: 1.8; margin: 10px 0;">
+          Take a breather!<br>Press <b>P</b> or <b>ESC</b> to resume.
+        </div>
+        <button id="resume-btn" class="btn-arcade btn-blue">RESUME</button>
+      </div>
+    </div>
+
+    <!-- Classic Flappy Bird Game Over Scoreboard -->
+    <div id="gameover-screen" class="overlay hidden">
+      <div class="scoreboard-title">GAME OVER</div>
+      
+      <div class="scoreboard-card">
+        <div class="scoreboard-body">
+          <!-- Medal Section -->
+          <div class="medal-slot">
+            <div class="medal-slot-label">MEDAL</div>
+            <div id="medal-icon" class="medal-circle">
+              <span style="color: #fde68a;">★</span>
+            </div>
+          </div>
+
+          <!-- Scores Section -->
+          <div class="scores-column">
+            <div class="score-row">
+              <span class="score-row-label">SCORE</span>
+              <span id="final-score" class="score-row-val">0</span>
+            </div>
+            <div class="score-row">
+              <span class="score-row-label">
+                BEST <span id="new-high-badge" class="badge-new hidden">NEW</span>
+              </span>
+              <span id="high-score" class="score-row-val">0</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button id="restart-btn" class="btn-arcade">PLAY AGAIN</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- How to Play / Guide Modal -->
+    <div id="guide-modal" class="overlay hidden">
+      <div class="modal-window">
+        <div class="modal-header">HOW TO PLAY</div>
+        <div style="font-size: 9px; line-height: 1.6; margin-bottom: 12px;">
+          Guide incoming birds safely through your pipe gap!
+        </div>
+
+        <div class="guide-grid">
+          <div class="guide-cell">
+            <div class="guide-badge-icon" style="background:#facc15;"></div>
+            <div><b>Normal</b><br>Gentle flaps</div>
+          </div>
+          <div class="guide-cell">
+            <div class="guide-badge-icon" style="background:#c084fc;"></div>
+            <div><b>Drunk</b><br>Wave drift</div>
+          </div>
+          <div class="guide-cell">
+            <div class="guide-badge-icon" style="background:#38bdf8;"></div>
+            <div><b>Fat</b><br>Heavy glide</div>
+          </div>
+          <div class="guide-cell">
+            <div class="guide-badge-icon" style="background:#ef4444;">
+              <svg class="icon-svg" style="width:14px;height:14px;fill:#fff;" viewBox="0 0 24 24"><path d="M12 2.5s4 4 4 10.5l3 3v2l-7-2-7 2v-2l3-3c0-6.5 4-10.5 4-10.5z"/></svg>
+            </div>
+            <div><b>Rocket</b><br>Speed dart</div>
+          </div>
+          <div class="guide-cell">
+            <div class="guide-badge-icon" style="background:#67e8f9;opacity:0.8;"></div>
+            <div><b>Ghost</b><br>Phase shift</div>
+          </div>
+          <div class="guide-cell">
+            <div class="guide-badge-icon" style="background:#fbbf24;">
+              <span style="color:#fff;font-size:13px;line-height:1;">★</span>
+            </div>
+            <div><b>Golden</b><br>+5 Pts Bonus</div>
+          </div>
+        </div>
+
+        <div style="font-size: 8.5px; line-height: 1.8; border-top: 2px dashed #b8a86a; padding-top: 8px; margin-bottom: 14px;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+            <svg class="icon-svg" style="width:16px;height:16px;fill:#22c55e;" viewBox="0 0 24 24"><path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z"/></svg>
+            <span><b>Wrench Kit</b>: Restores +1 Pipe HP</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <svg class="icon-svg" style="width:16px;height:16px;fill:#facc15;" viewBox="0 0 24 24"><path d="M7 2v11h3v9l7-12h-4l4-8z"/></svg>
+            <span><b>Mega Gap</b>: Widens pipe gap temporarily</span>
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button id="close-guide-btn" class="btn-arcade btn-orange">CLOSE</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Career Stats Modal -->
+    <div id="stats-modal" class="overlay hidden">
+      <div class="modal-window">
+        <div class="modal-header">CAREER STATS</div>
+        
+        <div class="stats-grid-retro">
+          <div class="stat-item">
+            <div>TOTAL SAVED</div>
+            <div id="stat-total-saved" class="stat-item-num">0</div>
+          </div>
+          <div class="stat-item">
+            <div>BEST RECORD</div>
+            <div id="stat-best-score" class="stat-item-num">0</div>
+          </div>
+          <div class="stat-item">
+            <div>BEST COMBO</div>
+            <div id="stat-best-combo" class="stat-item-num">0</div>
+          </div>
+          <div class="stat-item">
+            <div>GOLDEN RESCUED</div>
+            <div id="stat-golden-rescued" class="stat-item-num">0</div>
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button id="close-stats-btn" class="btn-arcade btn-blue">CLOSE</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Game Canvas -->
+    <canvas id="gameCanvas"></canvas>
+  </div>
+
+  <!-- Modular Scripts in Execution Order -->
+  <script src="js/config.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/particles.js"></script>
+  <script src="js/birds.js"></script>
+  <script src="js/pipe.js"></script>
+  <script src="js/scenery.js"></script>
+  <script src="js/powerups.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/game.js"></script>
+</body>
+</html>
